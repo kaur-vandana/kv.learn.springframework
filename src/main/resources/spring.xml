@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- bean definitions here -->
+  <!--
+  when you don't mention any scope, its by default singleton
+
+    here by default scope is singleton, it means spring container will give you only one instance of this class
+    <bean id="beanSeva" class="com.kv.spring.BeanSeva" scope="singleton"/>
+
+    In Singleton,
+    1. Spring creates one object for you, does nto care if you need or not
+    2. no matter how many objects you instantiate, all will point to the same reference
+    -->
+    <bean id="beanSevaSingleton" class="com.kv.spring.BeanSeva"/>
+
+    <!--
+    In prototype,
+    1. Spring will not create any object for you, till you ask
+    2. you can get multiple objects based on the number of times you ask for it.
+   -->
+    <bean id="beanSevaPrototype" class="com.kv.spring.BeanSeva" scope="prototype"/>
+
+    <!--
+    every variable in bean is called "property"
+    either the variable should be public or should have setter
+    when we set the variables using property - it is called SETTER INJECTION
+    1. Spring will create the object
+    2. Spring will set the value of beanInt variable
+    -->
+    <bean id="beanSevaSetProperty" class="com.kv.spring.BeanSeva">
+        <property name="beanInt" value="10"/>
+    </bean>
+
+    <bean id="laptopRef" class="com.kv.spring.Laptop">
+    </bean>
+
+
+    <!--    reference -->
+    <bean id="beanSevaSetProperty2" class="com.kv.spring.BeanSeva">
+        <property name="beanInt" value="569"/>
+        <property name="laptop" ref="laptopRef"/>
+    </bean>
+
+<!--    Constructor Injection-->
+    <bean id="beanSevaConstructorInjection" class="com.kv.spring.BeanSeva">
+        <constructor-arg value="799999">
+        </constructor-arg>
+    </bean>
+
+<!--    reference-->
+    <bean id="beanSevaConstructorInjectionRef" class="com.kv.spring.BeanSeva">
+        <constructor-arg name="beanInt" value="799999"> </constructor-arg>
+        <property name="laptop" ref="laptopRef"/>
+    </bean>
+
+
+<!--    autowire-->
+    <!--    autowire "byName" will get all the beans of reference type or object -->
+<!--    bean for class RefAttribute is added automatically-->
+    <bean id="autowireSevaLaptopBean" class="com.kv.spring.AutowireSeva">
+        <property name="autowireInt" value="741852"/>
+        <property name="seva" ref="laptopRef"/>
+    </bean>
+
+    <bean id="autowireSevaDestopBean" class="com.kv.spring.AutowireSeva">
+        <property name="autowireInt" value="951357"/>
+        <property name="seva" ref="desktopRef"/>
+    </bean>
+
+<!--it looks for seva object-->
+    <bean id="autowireSevaBean" class="com.kv.spring.AutowireSeva" autowire="byName">
+        <property name="autowireInt" value="987654"/>
+    </bean>
+    <bean id="seva" class="com.kv.spring.Laptop">
+    </bean>
+
+
+    <!-- it looks for any class that implements InterfaceSeva - object can be seva, laptop or desktop, so spring gets
+        confused.
+        we add primary="true" to the bean, which should get the highest priority-->
+    <bean id="autowireSevaBeanByType" class="com.kv.spring.AutowireSeva" autowire="byType">
+        <property name="autowireInt" value="123456"/>
+    </bean>
+    <bean id="desktopRef" class="com.kv.spring.Desktop" primary="true">
+    </bean>
+
+
+</beans>
+
+<!--notes-->
+        <!--https://docs.spring.io/spring-framework/docs/4.2.x/spring-framework-reference/html/xsd-configuration.html-->
+        <!--    Do not use Constructor, we the variable assignment is optional-->
